@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogIn, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -58,9 +59,16 @@ export default function LoginPage() {
             className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg px-4 py-3 mt-4 flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]"
           >
             <LogIn size={20} />
-            Login / Register
+            Login
           </button>
         </form>
+
+        <div className="mt-6 text-center text-sm text-neutral-400">
+          Don't have an account?{' '}
+          <Link href="/register" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+            Register here
+          </Link>
+        </div>
       </div>
     </div>
   );
