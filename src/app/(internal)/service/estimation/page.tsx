@@ -6,29 +6,29 @@ import { Sparkles, Check, ChevronRight, TrendingDown, Info } from 'lucide-react'
 const treatments = [
   {
     id: 'deep-clean',
-    name: 'Deep Clean',
-    desc: 'Complete wash for heavy dirt & stains on all materials.',
+    name: 'Cuci Mendalam',
+    desc: 'Pencucian lengkap untuk kotoran & noda membandel pada semua material.',
     basePrice: 65000,
     dynamicSurcharge: 10000,
-    time: '3-4 Days',
+    time: '3-4 Hari',
     recommended: true,
   },
   {
     id: 'fast-clean',
-    name: 'Fast Clean',
-    desc: 'Quick surface clean for light dirt.',
+    name: 'Cuci Cepat',
+    desc: 'Pembersihan permukaan cepat untuk kotoran ringan.',
     basePrice: 45000,
     dynamicSurcharge: 0,
-    time: '1 Day',
+    time: '1 Hari',
     recommended: false,
   },
   {
     id: 'whitening',
     name: 'Unyellowing',
-    desc: 'Special treatment to restore yellowed soles.',
+    desc: 'Perawatan khusus untuk mengembalikan warna asli sol yang menguning.',
     basePrice: 90000,
     dynamicSurcharge: 0,
-    time: '4-5 Days',
+    time: '4-5 Hari',
     recommended: true,
   }
 ];
@@ -51,17 +51,17 @@ export default function EstimationPage() {
   return (
     <div className="space-y-6 pb-[100px] md:pb-6">
       <div>
-        <h1 className="text-2xl font-bold text-white mb-2">Select Treatments</h1>
-        <p className="text-neutral-400 text-sm">Based on the AI diagnosis, here are our recommendations.</p>
+        <h1 className="text-2xl font-bold text-white mb-2">Pilih Perawatan</h1>
+        <p className="text-neutral-400 text-sm">Berdasarkan diagnosis AI, berikut adalah rekomendasi kami.</p>
       </div>
 
       {/* Dynamic Pricing Banner */}
       <div className="bg-blue-900/20 border border-blue-800 rounded-xl p-4 flex items-start gap-3">
         <Info className="text-blue-400 shrink-0 mt-0.5" size={20} />
         <div>
-          <p className="font-bold text-white text-sm">Dynamic Pricing Applied</p>
+          <p className="font-bold text-white text-sm">Harga Dinamis Diterapkan</p>
           <p className="text-xs text-neutral-400 mt-1">
-            Prices are adjusted based on the <strong className="text-neutral-300">High Dirt Level</strong> detected by AI. A surcharge is applied to deep cleaning.
+            Harga disesuaikan berdasarkan <strong className="text-neutral-300">Tingkat Kotoran Tinggi</strong> yang dideteksi oleh AI. Biaya tambahan diterapkan pada pencucian mendalam.
           </p>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default function EstimationPage() {
             >
               {t.recommended && (
                 <div className="absolute -top-3 right-4 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                  <Sparkles size={10} /> AI RECOMMENDED
+                  <Sparkles size={10} /> REKOMENDASI AI
                 </div>
               )}
               <div className="flex justify-between items-start">
@@ -102,7 +102,7 @@ export default function EstimationPage() {
                   {t.dynamicSurcharge > 0 && (
                     <span className="text-[10px] text-amber-500 flex items-center gap-1 mb-0.5">
                       <TrendingDown size={12} className="rotate-180" /> 
-                      High Dirt Surcharge: +Rp {t.dynamicSurcharge.toLocaleString('id-ID')}
+                      Biaya Tambahan Kotoran Tinggi: +Rp {t.dynamicSurcharge.toLocaleString('id-ID')}
                     </span>
                   )}
                   <span className="font-bold text-blue-400 text-lg">Rp {currentPrice.toLocaleString('id-ID')}</span>
@@ -116,7 +116,7 @@ export default function EstimationPage() {
       <div className="fixed bottom-[72px] md:bottom-0 left-0 w-full bg-neutral-900 border-t border-neutral-800 p-4 md:p-6 z-40 md:relative md:bg-transparent md:border-none md:p-0">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div>
-            <p className="text-sm text-neutral-400">Estimated Total</p>
+            <p className="text-sm text-neutral-400">Estimasi Total</p>
             <p className="text-xl font-bold text-white">Rp {totalPrice.toLocaleString('id-ID')}</p>
           </div>
           <button 
@@ -124,7 +124,7 @@ export default function EstimationPage() {
             onClick={() => router.push('/service/checkout')}
             className="bg-blue-600 disabled:bg-neutral-700 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center gap-2"
           >
-            Continue to Checkout <ChevronRight size={18} />
+            Lanjut ke Pembayaran <ChevronRight size={18} />
           </button>
         </div>
       </div>

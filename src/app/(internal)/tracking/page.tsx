@@ -1,5 +1,6 @@
 "use client";
-import { CheckCircle2, Clock, Truck, PlaySquare } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { CheckCircle2, Clock, Truck, PlaySquare, Navigation } from 'lucide-react';
 
 const steps = [
   { title: 'Picked Up', time: '10:00 AM', status: 'done', desc: 'Courier picked up your shoes.' },
@@ -10,6 +11,57 @@ const steps = [
 ];
 
 export default function TrackingPage() {
+  const [activeOrder, setActiveOrder] = useState<any>(null);
+
+  useEffect(() => {
+    const savedOrders = JSON.parse(localStorage.getItem('smartShoeOrders') || '[]');
+    const myName = localStorage.getItem('customerName') || 'Pelanggan (Tanpa Nama)';
+    // Ambil order pertama yang belum selesai
+    const myOrder = savedOrders.find((o: any) => o.customer === myName && o.laundryStatus !== 'selesai');
+    setActiveOrder(myOrder);
+  }, []);
+
+  // Tentukan state berdasarkan laundryStatus
+  const getSteps = () => {
+    const status = activeOrder?.laundryStatus;
+    
+    return [
+      { 
+        title: 'Penjemputan oleh Kurir', 
+        time: status === 'menunggu_pickup' ? 'Sedang menuju lokasi' : 'Selesai', 
+        status: status === 'menunggu_pickup' ? 'active' : 'done', 
+        desc: 'Kurir menuju alamat Anda untuk mengambil sepatu.' 
+      },
+      { 
+        title: 'Proses Pencucian (Deep Clean)', 
+        time: status === 'sedang_dicuci' ? 'Sedang Dicuci' : status === 'menunggu_pickup' ? 'Menunggu' : 'Selesai', 
+        status: status === 'sedang_dicuci' ? 'active' : status === 'menunggu_pickup' ? 'pending' : 'done', 
+        desc: 'Pembersihan mendalam bagian upper dan sole.' 
+      },
+      { 
+        title: 'Pengantaran Kembali', 
+        time: status === 'siap_diantar' ? 'Sedang Diantar' : 'Menunggu', 
+        status: status === 'siap_diantar' ? 'active' : 'pending', 
+        desc: 'Sepatu bersih Anda sedang dalam perjalanan pulang.' 
+      },
+    ];
+  };
+
+  if (!activeOrder) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold text-white mb-6">Live Tracking</h1>
+        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-8 text-center">
+          <Navigation size={48} className="text-neutral-700 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-white mb-2">Tidak Ada Tracking Aktif</h2>
+          <p className="text-neutral-400 text-sm">Anda belum memiliki pesanan sepatu yang sedang diproses.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const steps = getSteps();
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-white mb-6">Live Tracking</h1>
@@ -17,11 +69,13 @@ export default function TrackingPage() {
       <div className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden">
         <div className="bg-neutral-800 p-4 border-b border-neutral-700 flex justify-between items-center">
           <div>
-            <h3 className="font-bold text-white">Nike Air Jordan 1</h3>
-            <p className="text-sm text-neutral-400">ORD-8921</p>
+            <h3 className="font-bold text-white">{activeOrder.service}</h3>
+            <p className="text-sm text-neutral-400">{activeOrder.id}</p>
           </div>
-          <div className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-xs font-bold border border-blue-500/30">
-            WASHING
+          <div className={`px-3 py-1 rounded-full text-xs font-bold border ${
+            activeOrder.laundryStatus === 'sedang_dicuci' ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+          }`}>
+            {activeOrder.laundryStatus === 'sedang_dicuci' ? 'WASHING' : 'PICKUP'}
           </div>
         </div>
         

@@ -14,7 +14,8 @@ export default function RegisterPage() {
     e.preventDefault();
     if (name && email && password) {
       // In a real app, you would send this to an API
-      // For now, redirect to dashboard after successful "registration"
+      localStorage.setItem('userRole', 'customer');
+      localStorage.setItem('customerName', name);
       router.push('/dashboard');
     }
   };
@@ -27,16 +28,16 @@ export default function RegisterPage() {
             <Sparkles size={32} className="text-white" />
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
-            Create Account
+            Buat Akun
           </h1>
           <p className="text-neutral-400 mt-2 text-center text-sm">
-            Join Smart Shoe Care Ecosystem
+            Gabung dengan Ekosistem Smart Shoe Care
           </p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-neutral-300 mb-1">Full Name</label>
+            <label className="block text-sm font-medium text-neutral-300 mb-1">Nama Lengkap</label>
             <input 
               type="text" 
               required
@@ -58,7 +59,7 @@ export default function RegisterPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-neutral-300 mb-1">Password</label>
+            <label className="block text-sm font-medium text-neutral-300 mb-1">Kata Sandi</label>
             <input 
               type="password" 
               required
@@ -73,14 +74,14 @@ export default function RegisterPage() {
             className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg px-4 py-3 mt-4 flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
           >
             <UserPlus size={20} />
-            Register
+            Daftar
           </button>
         </form>
 
         <div className="mt-6 text-center text-sm text-neutral-400">
-          Already have an account?{' '}
+          Sudah punya akun?{' '}
           <Link href="/" className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors">
-            Login here
+            Masuk di sini
           </Link>
         </div>
       </div>

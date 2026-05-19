@@ -1,14 +1,22 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { MapPin, Truck, Ticket, CreditCard, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { MapPin, Truck, Ticket, CreditCard, CheckCircle2, ShieldCheck, Upload, Image as ImageIcon } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const [customerName, setCustomerName] = useState('');
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [hasInsurance, setHasInsurance] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'cod'>('transfer');
+  const [receiptUploaded, setReceiptUploaded] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  useEffect(() => {
+    const savedName = localStorage.getItem('customerName');
+    if (savedName) setCustomerName(savedName);
+  }, []);
 
   const basePrice = 75000;
   const discount = promoApplied ? 15000 : 0;
@@ -24,6 +32,19 @@ export default function CheckoutPage() {
 
   const handleCheckout = () => {
     setIsSuccess(true);
+    
+    // Simpan pesanan ke localStorage agar terbaca oleh Admin
+    const newOrder = {
+      id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+      customer: customerName || 'Pelanggan (Tanpa Nama)',
+      service: 'Deep Clean Treatment',
+      status: paymentMethod === 'transfer' ? 'Menunggu Validasi (Transfer)' : 'COD (Kurir)',
+      laundryStatus: 'menunggu_pickup', // Status awal fisik barang
+    };
+    
+    const existingOrders = JSON.parse(localStorage.getItem('smartShoeOrders') || '[]');
+    localStorage.setItem('smartShoeOrders', JSON.stringify([newOrder, ...existingOrders]));
+
     setTimeout(() => {
       router.push('/dashboard');
     }, 2000);
@@ -45,6 +66,22 @@ export default function CheckoutPage() {
   return (
     <div className="space-y-6 pb-6">
       <h1 className="text-2xl font-bold text-white mb-6">Checkout</h1>
+
+      {/* Detail Pemesan */}
+      <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 space-y-4">
+        <h2 className="text-lg font-bold text-white">Detail Pemesan</h2>
+        <div>
+          <label className="block text-sm font-medium text-neutral-400 mb-2">Nama Lengkap</label>
+          <input 
+            type="text" 
+            placeholder="Masukkan nama Anda" 
+            className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-3 text-white focus:ring-1 focus:ring-blue-500 outline-none"
+            value={customerName}
+            onChange={(e) => setCustomerName(e.target.value)}
+            required
+          />
+        </div>
+      </div>
 
       {/* Pickup Request & Routing Mock */}
       <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 space-y-4">
@@ -113,10 +150,59 @@ export default function CheckoutPage() {
         </label>
       </div>
 
-      {/* Payment */}
+      {/* Payment Method & Upload */}
       <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 space-y-4">
         <h2 className="text-lg font-bold text-white flex items-center gap-2">
-          <CreditCard size={20} className="text-purple-400" /> Payment Summary
+          <CreditCard size={20} className="text-blue-400" /> Metode Pembayaran
+        </h2>
+        
+        <div className="grid grid-cols-2 gap-3">
+          <button 
+            onClick={() => setPaymentMethod('transfer')}
+            className={`p-3 rounded-lg border flex flex-col items-center justify-center gap-2 transition-all ${
+              paymentMethod === 'transfer' ? 'border-blue-500 bg-blue-500/10 text-blue-400' : 'border-neutral-700 bg-neutral-950 text-neutral-400 hover:border-neutral-500'
+            }`}
+          >
+            <CreditCard size={24} />
+            <span className="text-sm font-medium">Transfer Bank</span>
+          </button>
+          <button 
+            onClick={() => setPaymentMethod('cod')}
+            className={`p-3 rounded-lg border flex flex-col items-center justify-center gap-2 transition-all ${
+              paymentMethod === 'cod' ? 'border-blue-500 bg-blue-500/10 text-blue-400' : 'border-neutral-700 bg-neutral-950 text-neutral-400 hover:border-neutral-500'
+            }`}
+          >
+            <Truck size={24} />
+            <span className="text-sm font-medium">Bayar di Tempat (COD)</span>
+          </button>
+        </div>
+
+        {paymentMethod === 'transfer' && (
+          <div className="pt-2 border-t border-neutral-800">
+            <p className="text-sm text-neutral-400 mb-3">Silakan transfer ke rekening BCA 1234567890 a.n Smart Shoe Care dan unggah bukti transfer.</p>
+            
+            {!receiptUploaded ? (
+              <button 
+                onClick={() => setReceiptUploaded(true)}
+                className="w-full h-24 border-2 border-dashed border-neutral-700 hover:border-blue-500 bg-neutral-950 rounded-lg flex flex-col items-center justify-center gap-2 text-neutral-400 hover:text-blue-400 transition-colors"
+              >
+                <Upload size={24} />
+                <span className="text-xs font-medium">Unggah Bukti Transfer</span>
+              </button>
+            ) : (
+              <div className="w-full h-24 bg-emerald-900/20 border border-emerald-800/50 rounded-lg flex flex-col items-center justify-center gap-2 text-emerald-400">
+                <CheckCircle2 size={24} />
+                <span className="text-xs font-medium">Bukti Transfer Berhasil Diunggah</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Payment Summary */}
+      <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 space-y-4">
+        <h2 className="text-lg font-bold text-white flex items-center gap-2">
+          <Ticket size={20} className="text-purple-400" /> Ringkasan Pembayaran
         </h2>
         <div className="space-y-2 text-sm text-neutral-300">
           <div className="flex justify-between">
@@ -148,9 +234,10 @@ export default function CheckoutPage() {
 
       <button 
         onClick={handleCheckout}
-        className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.3)]"
+        disabled={(paymentMethod === 'transfer' && !receiptUploaded) || !customerName.trim()}
+        className="w-full bg-blue-600 disabled:bg-neutral-700 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.3)] disabled:shadow-none"
       >
-        Confirm Order & Pay
+        {paymentMethod === 'transfer' ? 'Konfirmasi & Bayar' : 'Konfirmasi Pesanan (COD)'}
       </button>
     </div>
   );

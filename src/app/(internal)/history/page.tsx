@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { Search, Filter, Box, Grid, List as ListIcon, Droplet } from 'lucide-react';
 
 const history = [
-  { id: 'ORD-7521', item: 'Vans Old Skool', date: '12 Oct 2025', service: 'Fast Clean', price: 45000, status: 'Completed' },
-  { id: 'ORD-6399', item: 'Nike Air Force 1', date: '05 Sep 2025', service: 'Deep Clean + Whitening', price: 165000, status: 'Completed' },
+  { id: 'ORD-7521', item: 'Vans Old Skool', date: '12 Okt 2025', service: 'Cuci Cepat', price: 45000, status: 'Selesai' },
+  { id: 'ORD-6399', item: 'Nike Air Force 1', date: '05 Sep 2025', service: 'Cuci Mendalam + Pemutihan', price: 165000, status: 'Selesai' },
 ];
 
 const closet = [
-  { id: 'SHOE-1', brand: 'Nike', name: 'Air Jordan 1 Retro High', type: 'Leather', condition: 'Good', lastCleaned: '12 Oct 2025' },
-  { id: 'SHOE-2', brand: 'Adidas', name: 'Yeezy Boost 350', type: 'Knit', condition: 'Excellent', lastCleaned: '20 Sep 2025' },
-  { id: 'SHOE-3', brand: 'Vans', name: 'Old Skool', type: 'Canvas / Suede', condition: 'Needs Wash', lastCleaned: '01 Jan 2025' },
+  { id: 'SHOE-1', brand: 'Nike', name: 'Air Jordan 1 Retro High', type: 'Leather', condition: 'Bagus', lastCleaned: '12 Okt 2025' },
+  { id: 'SHOE-2', brand: 'Adidas', name: 'Yeezy Boost 350', type: 'Knit', condition: 'Sangat Bagus', lastCleaned: '20 Sep 2025' },
+  { id: 'SHOE-3', brand: 'Vans', name: 'Old Skool', type: 'Canvas / Suede', condition: 'Perlu Dicuci', lastCleaned: '01 Jan 2025' },
 ];
 
 export default function HistoryPage() {
@@ -19,7 +19,7 @@ export default function HistoryPage() {
   return (
     <div className="space-y-6 pb-6">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold text-white">Shoe Care Profile</h1>
+        <h1 className="text-2xl font-bold text-white">Profil Shoe Care</h1>
       </div>
 
       {/* Tabs */}
@@ -30,7 +30,7 @@ export default function HistoryPage() {
             activeTab === 'closet' ? 'bg-neutral-800 text-white' : 'text-neutral-400 hover:text-white'
           }`}
         >
-          <Grid size={16} /> Digital Wardrobe
+          <Grid size={16} /> Lemari Digital
         </button>
         <button 
           onClick={() => setActiveTab('history')}
@@ -38,7 +38,7 @@ export default function HistoryPage() {
             activeTab === 'history' ? 'bg-neutral-800 text-white' : 'text-neutral-400 hover:text-white'
           }`}
         >
-          <ListIcon size={16} /> Order History
+          <ListIcon size={16} /> Riwayat Pesanan
         </button>
       </div>
 
@@ -47,7 +47,7 @@ export default function HistoryPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" size={18} />
           <input 
             type="text" 
-            placeholder={activeTab === 'closet' ? "Search your shoes..." : "Search order ID..."}
+            placeholder={activeTab === 'closet' ? "Cari sepatu Anda..." : "Cari ID pesanan..."}
             className="w-full bg-neutral-900 border border-neutral-800 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
@@ -70,17 +70,17 @@ export default function HistoryPage() {
                   <p className="text-sm text-neutral-400 mt-1">{shoe.type}</p>
                   
                   <div className={`inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                    shoe.condition === 'Needs Wash' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                    shoe.condition === 'Perlu Dicuci' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                   }`}>
                     {shoe.condition}
                   </div>
                 </div>
               </div>
               <div className="border-t border-neutral-800 pt-3 flex items-center justify-between">
-                <span className="text-xs text-neutral-500">Last cleaned: {shoe.lastCleaned}</span>
-                {shoe.condition === 'Needs Wash' && (
+                <span className="text-xs text-neutral-500">Terakhir dicuci: {shoe.lastCleaned}</span>
+                {shoe.condition === 'Perlu Dicuci' && (
                   <button className="text-blue-400 text-xs font-bold flex items-center gap-1 hover:text-blue-300">
-                    <Droplet size={14} /> Book Wash
+                    <Droplet size={14} /> Pesan Cuci
                   </button>
                 )}
               </div>

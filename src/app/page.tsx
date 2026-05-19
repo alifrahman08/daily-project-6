@@ -8,11 +8,29 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) {
+    setError('');
+    
+    if (!email || !password) {
+      setError('Silakan masukkan email dan kata sandi.');
+      return;
+    }
+
+    // Simulasi Autentikasi Berdasarkan Role
+    if (email === 'admin@admin.com' && password === 'admin123') {
+      localStorage.setItem('userRole', 'admin');
       router.push('/dashboard');
+    } else if (email === 'kurir@kurir.com' && password === 'kurir123') {
+      localStorage.setItem('userRole', 'kurir');
+      router.push('/dashboard');
+    } else if (email === 'customer@customer.com' && password === 'customer123') {
+      localStorage.setItem('userRole', 'customer');
+      router.push('/dashboard');
+    } else {
+      setError('Email/sandi salah! Coba: admin@admin.com (admin123), kurir@kurir.com (kurir123), atau customer@customer.com (customer123).');
     }
   };
 
@@ -32,6 +50,11 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/50 text-red-500 text-sm px-4 py-2 rounded-lg text-center">
+              {error}
+            </div>
+          )}
           <div>
             <label className="block text-sm font-medium text-neutral-300 mb-1">Email</label>
             <input 
@@ -44,7 +67,7 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-neutral-300 mb-1">Password</label>
+            <label className="block text-sm font-medium text-neutral-300 mb-1">Kata Sandi</label>
             <input 
               type="password" 
               required
@@ -59,17 +82,18 @@ export default function LoginPage() {
             className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg px-4 py-3 mt-4 flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]"
           >
             <LogIn size={20} />
-            Login
+            Masuk
           </button>
         </form>
 
         <div className="mt-6 text-center text-sm text-neutral-400">
-          Don't have an account?{' '}
+          Belum punya akun?{' '}
           <Link href="/register" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
-            Register here
+            Daftar di sini
           </Link>
         </div>
       </div>
+
     </div>
   );
 }
